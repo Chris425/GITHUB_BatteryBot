@@ -50,10 +50,11 @@ public class MeleeFollowSP : MonoBehaviour
         //case when your player projectile hits the vampire
         if (other.gameObject.name.Contains("Shot"))
         {
-           
+
             //make a special effect on death
             if (other.gameObject.name.Contains("PlayerShot"))
             {
+                //Note that multishot has the same damage - you just shoot a bunch at the same time
                 if (HeroControllerSP.isSuperCharged == true)
                 {
                     health -= 2;
@@ -67,23 +68,46 @@ public class MeleeFollowSP : MonoBehaviour
             }
             else if (other.gameObject.name.Contains("GS_Shot"))
             {
-                Instantiate(BloodSpecEffect, other.transform.position, this.transform.rotation);
-               
-                health -= 3;
+                if (other.gameObject.name.Contains("FIRE"))
+                {
+                    health -= 4;
+                    Instantiate(BloodSpecEffect, other.transform.position, this.transform.rotation);
+                }
+                else
+                {
+                    health -= 2;
+                    Instantiate(BloodSpecEffect, other.transform.position, this.transform.rotation);
+                }
+
             }
             else if (other.gameObject.name.Contains("Axe_Shot"))
             {
-                Instantiate(BloodSpecEffect, other.transform.position, this.transform.rotation);
+                if (other.gameObject.name.Contains("LIGHTNING"))
+                {
+                    health -= 2;
+                    Instantiate(BloodSpecEffect, other.transform.position, this.transform.rotation);
+                }
+                else
+                {
+                    health -= 1;
+                    Instantiate(BloodSpecEffect, other.transform.position, this.transform.rotation);
+                }
+
+            }
+            //note that shield shot IS the ice special... shield normally shoots an axe shot (because reasons)
+            else if (other.gameObject.name.Contains("Shield_Shot"))
+            {
                 health -= 2;
+                Instantiate(DeathSpecEffect, other.transform.position, this.transform.rotation);
             }
             //possibly spawn some loot!
 
             if (health <= 0)
             {
                 //vampire is dead
-                 Destroy(this.gameObject);
+                Destroy(this.gameObject);
                 int randomNum = Random.Range(1, 14);
-                if (randomNum <= 2 )
+                if (randomNum <= 2)
                 {
                     int posOffset = Random.Range(-4, 4);
                     int rotOffset1 = Random.Range(1, 180);
@@ -124,7 +148,7 @@ public class MeleeFollowSP : MonoBehaviour
 
                 }
             }
-           
+
 
 
             //remove your player bullet as well - unless player is currently supercharged (>120% power)
@@ -132,7 +156,11 @@ public class MeleeFollowSP : MonoBehaviour
             {
                 Destroy(other.gameObject);
             }
-            
+
+        }
+        else if (other.gameObject.name.Contains("Iceberg"))            
+        {
+            Debug.Log("IT WORKS ");
         }
     }
 

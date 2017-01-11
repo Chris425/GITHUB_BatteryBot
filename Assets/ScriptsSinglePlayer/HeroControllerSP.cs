@@ -19,6 +19,9 @@ public class HeroControllerSP : MonoBehaviour
     public GameObject SE_hit;
     public ParticleSystem IdleGasStream;
     public ParticleSystem WorkingGasStream;
+    public GameObject GreatswordFire;
+    public GameObject AxeLightning;
+
     //inventory
     public GameObject shield;
     public GameObject axe;
@@ -26,13 +29,20 @@ public class HeroControllerSP : MonoBehaviour
     public GameObject GS;
     public GameObject jetBooster;
     public GameObject GSShot;
+    public GameObject GSShot_FIRE;
     public GameObject AxeShot;
+    public GameObject AxeShot_LIGHTNING;
+    public GameObject ShieldShot_ICE;
     public GameObject BoosterSE;
     public static bool hasShield;
     public static bool hasJetBooster;
     public static bool hasAxe;
     public static bool hasGun;
     public static bool hasGS;
+    public static bool hasGS_FIRE;
+    public static bool hasAxe_LIGHTNING;
+    public static bool hasShield_ICE;
+    public static bool hasGun_MULTI;
 
     public static bool isSlot1 = false;
     public static bool isSlot2 = false;
@@ -65,9 +75,11 @@ public class HeroControllerSP : MonoBehaviour
     public static int Ammo;
     public Text ammoValText;
     public GameObject objToSpawn;
+    public GameObject GunShot_MULTI;
     public GameObject interactShot;
     public GameObject spawnLoc;
     public float cooldown = 0.9f;
+    public float specialCooldown = 5.5f;
     private float dashCooldown = 14.8f;
     private float cooldownTimer;
     private float dashCooldownTimer;
@@ -127,17 +139,19 @@ public class HeroControllerSP : MonoBehaviour
         }
     }
 
+
     public void OnEnable()
     {
         anim = this.GetComponentInChildren<Animator>();
         anim.applyRootMotion = false;
+        GreatswordFire.SetActive(false);
+        AxeLightning.SetActive(false);
 
         gun.SetActive(false);
         shield.SetActive(false);
         GS.SetActive(false);
         axe.SetActive(false);
-        jetBooster.SetActive(false);
-
+        jetBooster.SetActive(false);       
 
         battery = 100;
         speed = 15.0f;
@@ -148,6 +162,10 @@ public class HeroControllerSP : MonoBehaviour
         hasAxe = false;
         hasGun = false;
         hasGS = false;
+        hasGS_FIRE = false;
+        hasAxe_LIGHTNING = false;
+        hasGun_MULTI = false;
+        hasShield_ICE = false;
         hasJetBooster = false;
 
         batteryValText.text = "" + battery + " %";
@@ -227,6 +245,26 @@ public class HeroControllerSP : MonoBehaviour
         if (hasJetBooster)
         {
             emptyInvSlots[4].texture = invSlots[4];
+        }
+        if (hasAxe_LIGHTNING)
+        {
+            AxeLightning.SetActive(true);
+            emptyInvSlots[5].texture = invSlots[5];
+        }
+        if (hasGun_MULTI)
+        {
+            //make passive glow effect for gun ? - cdc
+            emptyInvSlots[6].texture = invSlots[6];
+        }
+        if (hasGS_FIRE)
+        {           
+            GreatswordFire.SetActive(true);
+            emptyInvSlots[7].texture = invSlots[7];
+        }        
+        if (hasShield_ICE)
+        {
+            //make passive frost effect for shield ? - cdc
+            emptyInvSlots[8].texture = invSlots[8];
         }
 
     }
@@ -574,16 +612,50 @@ public class HeroControllerSP : MonoBehaviour
                 anim.SetTrigger("isSlashing");
                 Instantiate(GSShot, spawnLoc.transform.position, this.transform.rotation);
                 cooldownTimer = cooldown;
-
+                
             }
             else if (Input.GetButton("Fire1") && cooldownTimer < 0.01f && hasAxe && isSlot1)
             {
                 anim.SetTrigger("isAxeHacking");
                 Instantiate(AxeShot, spawnLoc.transform.position, this.transform.rotation);
                 cooldownTimer = cooldown;
+                
             }
+
+
+            //SPECIAL ATTACKS - X
+            if (Input.GetKey("x") && cooldownTimer < 0.01f && hasAxe && hasAxe_LIGHTNING && isSlot1)
+            {
+                anim.SetTrigger("isAxeHacking");
+                Instantiate(AxeShot_LIGHTNING, spawnLoc.transform.position, this.transform.rotation);
+                cooldownTimer = specialCooldown;
+            }
+            else if (Input.GetKey("x") && cooldownTimer < 0.01f && hasGS && hasGS_FIRE && isSlot3)
+            {
+                anim.SetTrigger("isSlashing");
+                Instantiate(GSShot_FIRE, spawnLoc.transform.position, this.transform.rotation);
+                cooldownTimer = specialCooldown;
+            }
+            else if (Input.GetKey("x") && cooldownTimer < 0.01f && hasGun && hasGun_MULTI && isSlot2)
+            {
+                anim.SetTrigger("isPunching");
+                Instantiate(GunShot_MULTI, spawnLoc.transform.position, this.transform.rotation);
+                cooldownTimer = specialCooldown;
+               // Ammo -= 1;  // special uses no ammo!
+            }
+
+            //note that offhands will use C to differentiate
+            if (Input.GetKey("c") && cooldownTimer < 0.01f && hasShield && hasShield_ICE && isSlot4)
+            {
+                anim.SetTrigger("isAxeHacking");
+                Instantiate(ShieldShot_ICE, spawnLoc.transform.position, this.transform.rotation);
+                cooldownTimer = 7.5f;
+            }
+
+            
+
             //interact button
-            if(Input.GetKey("f") && cooldownTimer < 0.01f)
+            if (Input.GetKey("f") && cooldownTimer < 0.01f)
             {
                 anim.SetTrigger("isPunching");
                 Instantiate(interactShot, spawnLoc.transform.position, this.transform.rotation);

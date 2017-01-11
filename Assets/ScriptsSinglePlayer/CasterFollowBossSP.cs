@@ -59,6 +59,7 @@ public class CasterFollowBossSP : MonoBehaviour
             isAggroed = true;
             if (other.gameObject.name.Contains("PlayerShot"))
             {
+                //Note that multishot has the same damage - you just shoot a bunch at the same time
                 if (HeroControllerSP.isSuperCharged == true)
                 {
                     bossHealth -= 3;
@@ -72,16 +73,40 @@ public class CasterFollowBossSP : MonoBehaviour
             }
             else if (other.gameObject.name.Contains("GS_Shot"))
             {
-                bossHealth -= 3;
-                Instantiate(BloodSpecEffect, other.transform.position, this.transform.rotation);
+                if (other.gameObject.name.Contains("FIRE"))
+                {
+                    bossHealth -= 4;
+                    Instantiate(BloodSpecEffect, other.transform.position, this.transform.rotation);
+                }
+                else
+                {
+                    bossHealth -= 2;
+                    Instantiate(BloodSpecEffect, other.transform.position, this.transform.rotation);
+                }
+
             }
             else if (other.gameObject.name.Contains("Axe_Shot"))
             {
+                if (other.gameObject.name.Contains("LIGHTNING"))
+                {
+                    bossHealth -= 2;
+                    Instantiate(BloodSpecEffect, other.transform.position, this.transform.rotation);
+                }
+                else
+                {
+                    bossHealth -= 1;
+                    Instantiate(BloodSpecEffect, other.transform.position, this.transform.rotation);
+                }
+
+            }
+            //note that shield shot IS the ice special... shield normally shoots an axe shot (because reasons)
+            else if (other.gameObject.name.Contains("Shield_Shot"))
+            {
                 bossHealth -= 2;
-                Instantiate(BloodSpecEffect, other.transform.position, this.transform.rotation);
+                Instantiate(DeathSpecEffect, other.transform.position, this.transform.rotation);
             }
 
-            
+
             //consume playershot
             Destroy(other.gameObject);
             if (bossHealth <= 0)
