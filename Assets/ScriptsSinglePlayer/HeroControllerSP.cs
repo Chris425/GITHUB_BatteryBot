@@ -28,6 +28,7 @@ public class HeroControllerSP : MonoBehaviour
     public GameObject gun;
     public GameObject GS;
     public GameObject jetBooster;
+    public GameObject JetBooster_ARCANE;
     public GameObject GSShot;
     public GameObject GSShot_FIRE;
     public GameObject AxeShot;
@@ -36,6 +37,7 @@ public class HeroControllerSP : MonoBehaviour
     public GameObject BoosterSE;
     public static bool hasShield;
     public static bool hasJetBooster;
+    public static bool hasJetBooster_ARCANE;
     public static bool hasAxe;
     public static bool hasGun;
     public static bool hasGS;
@@ -167,6 +169,7 @@ public class HeroControllerSP : MonoBehaviour
         hasGun_MULTI = false;
         hasShield_ICE = false;
         hasJetBooster = false;
+        hasJetBooster_ARCANE = false;
 
         batteryValText.text = "" + battery + " %";
         ammoValText.text = "" + Ammo;
@@ -265,6 +268,11 @@ public class HeroControllerSP : MonoBehaviour
         {
             //make passive frost effect for shield ? - cdc
             emptyInvSlots[8].texture = invSlots[8];
+        }
+        if (hasJetBooster_ARCANE)
+        {
+            //make passive arcane effect for booster? - cdc
+            emptyInvSlots[9].texture = invSlots[9];
         }
 
     }
@@ -647,12 +655,19 @@ public class HeroControllerSP : MonoBehaviour
             //note that offhands will use C to differentiate
             if (Input.GetKey("c") && cooldownTimer < 0.01f && hasShield && hasShield_ICE && isSlot4)
             {
-                anim.SetTrigger("isAxeHacking");
+                anim.SetTrigger("isShieldBashing");
                 Instantiate(ShieldShot_ICE, spawnLoc.transform.position, this.transform.rotation);
-                cooldownTimer = 7.5f;
+                cooldownTimer = 8.0f;
             }
 
-            
+            if (Input.GetKey("c") && cooldownTimer < 0.01f && hasJetBooster && hasJetBooster_ARCANE && isSlot5)
+            {
+                anim.SetTrigger("isShieldBashing");
+                Instantiate(JetBooster_ARCANE, spawnLoc.transform.position, this.transform.rotation);
+                cooldownTimer = specialCooldown;
+            }
+
+
 
             //interact button
             if (Input.GetKey("f") && cooldownTimer < 0.01f)

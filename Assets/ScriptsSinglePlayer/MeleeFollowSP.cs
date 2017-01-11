@@ -30,7 +30,7 @@ public class MeleeFollowSP : MonoBehaviour
 
     public static bool isAggroed;
 
-    private int health = 1;
+    private int health = 2;
 
 
     void OnEnable()
