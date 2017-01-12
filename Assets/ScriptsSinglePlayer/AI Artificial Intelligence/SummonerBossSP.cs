@@ -30,7 +30,15 @@ public class SummonerBossSP : MonoBehaviour
     private Animator anim;
     NavMeshAgent agent;
     
-    private int bossHealth = 20;
+    private int bossHealth = 50;
+
+    //gamestates correspond to behaviour methods. Only one can be active at a time.
+    public bool gameState_OoC;
+    public bool gameState_MovingToTarget;
+    public bool gameState_InRangeAttacking;
+    public bool gameState_Fleeing;
+    public bool gameState_Healing;
+
 
     //get location of character!
     public GameObject target;
@@ -78,6 +86,14 @@ public class SummonerBossSP : MonoBehaviour
 
     void OnEnable()
     {
+
+        gameState_OoC = true;
+        gameState_MovingToTarget = false;
+        gameState_InRangeAttacking = false;
+        gameState_Fleeing = false;
+        gameState_Healing = false;
+
+
         agent = GetComponent<NavMeshAgent>();
         target = GameObject.Find("BatteryBot");
 
@@ -88,6 +104,134 @@ public class SummonerBossSP : MonoBehaviour
         shouldPlayAggroEffect = true;
         FlameEffect.gameObject.SetActive(false);
     }
+
+    void Update()
+    {
+        cooldownTimer -= 0.03f;
+        summonCooldownTimer -= 0.03f;
+
+        distanceX = this.transform.position.x - target.transform.position.x;
+        distanceZ = this.transform.position.z - target.transform.position.z;
+        distanceY = this.transform.position.y - target.transform.position.y;
+        checkAggro();
+
+        if (isAggroed)
+        {
+
+            if (bossHealth > 10 && (distanceX < -8.0 && distanceX > 8.0) && (distanceZ < -8.0 && distanceZ > 8.0))
+            {
+                Behaviour_MovingToTarget();
+            }
+            else
+            {
+                Behaviour_InRangeAttacking();
+            }
+            
+        }
+
+    }
+
+    private void checkAggro()
+    {
+        if (!gameState_Fleeing || !gameState_Healing)
+        {
+
+
+            if ((distanceX > -15 && distanceX < 15) && (distanceZ > -15 && distanceZ < 15) && (distanceY > -10 && distanceY < 10))
+            {
+                isAggroed = true;
+                anim.SetBool("IsAggroed", true);
+                agent.Resume();
+                if (shouldPlayAggroEffect)
+                {
+                    Instantiate(AggroSpecEffect, this.transform.position, aggroRot);
+                    shouldPlayAggroEffect = false;
+                }
+            }
+        }
+        
+    }
+
+    /*
+    gameState_OoC = true;
+    gameState_MovingToTarget = false;
+    gameState_InRangeAttacking = false;
+    gameState_Fleeing = false;
+    gameState_Healing = false;
+    */
+
+    void Behaviour_MovingToTarget()
+    {
+        //make the spawnloc aim at the player - so you won't be safe up high either!
+        Vector3 targetPostition = new Vector3(target.transform.position.x,
+                                       target.transform.position.y,
+                                       target.transform.position.z);
+        CasterSpawnLoc.transform.LookAt(targetPostition);
+
+        //let the caster face the player at all times
+        this.transform.LookAt(targetPostition);
+        CasterSpawnLoc.transform.LookAt(targetPostition);
+
+
+        agent.SetDestination(target.transform.position);
+    }
+
+    void Behaviour_InRangeAttacking()
+    {
+        Vector3 targetPostition = new Vector3(target.transform.position.x,
+                                       target.transform.position.y,
+                                       target.transform.position.z);
+        this.transform.LookAt(targetPostition);
+        CasterSpawnLoc.transform.LookAt(targetPostition);
+
+        if ((distanceX > -8.0 && distanceX < 8.0) && (distanceZ > -8.0 && distanceZ < 8.0) && cooldownTimer < 0.01f)
+        {
+
+            anim.SetTrigger("isAttacking");
+            //we are in range. Start shooting
+            Debug.Log("Caster is readying a fireball!");
+            Instantiate(objToSpawn, CasterSpawnLoc.transform.position, CasterSpawnLoc.transform.rotation);
+            cooldownTimer = cooldown;
+            Instantiate(CasterSpecEffect, this.transform.position, this.transform.rotation);
+
+        }
+        // when you're in range but on cooldown
+        else if ((distanceX > -8.0 && distanceX < 8.0) && (distanceZ > -8.0 && distanceZ < 8.0) && cooldownTimer > 0.01f)
+        {
+            FlameEffect.gameObject.SetActive(true);
+            anim.SetTrigger("isIdle");
+            anim.SetBool("IsNotInRange", false);
+        }
+        else
+        {
+            if (agent.isActiveAndEnabled)
+            {
+                anim.SetBool("IsNotInRange", true);
+                FlameEffect.gameObject.SetActive(false);
+                agent.SetDestination(target.transform.position);
+            }
+
+        }
+    }
+
+    void Behaviour_Fleeing()
+    {
+
+    }
+
+    void Behaviour_Healing()
+    {
+
+    }
+
+    void moveToPlayer()
+    {
+
+      
+        
+
+    }
+
 
     public void OnCollisionEnter(Collision other)
     {
@@ -300,92 +444,6 @@ public class SummonerBossSP : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        distanceX = this.transform.position.x - target.transform.position.x;
-        distanceZ = this.transform.position.z - target.transform.position.z;
-        distanceY = this.transform.position.y - target.transform.position.y;
-        checkAggro();
-
-        if (isAggroed)
-        {
-            moveToPlayer();
-        }
-
-    }
-
-    private void checkAggro()
-    {
-        if ((distanceX > -15 && distanceX < 15) && (distanceZ > -15 && distanceZ < 15) && (distanceY > -10 && distanceY < 10))
-        {
-            isAggroed = true;
-            anim.SetBool("IsAggroed", true);
-            agent.Resume();
-            if (shouldPlayAggroEffect)
-            {
-                Instantiate(AggroSpecEffect, this.transform.position, aggroRot);
-                shouldPlayAggroEffect = false;
-            }
-        }
-        //if you have aggroed, then ran away, and you're too far she gives up
-        else if ((distanceX < -45 || distanceX > 45) || (distanceZ < -45 || distanceZ > 45) || (distanceY < -10 || distanceY > 10))
-        {
-            isAggroed = false;
-            anim.SetBool("IsAggroed", false);
-            if (agent.isActiveAndEnabled)
-            {
-                shouldPlayAggroEffect = true;
-                agent.Stop();
-            }
-        }
-    }
-
-    void moveToPlayer()
-    {
-        //make the spawnloc aim at the player - so you won't be safe up high either!
-        Vector3 targetPostition = new Vector3(target.transform.position.x,
-                                       target.transform.position.y,
-                                       target.transform.position.z);
-        CasterSpawnLoc.transform.LookAt(targetPostition);
-
-        //let the caster face the player at all times
-        this.transform.LookAt(targetPostition);
-        CasterSpawnLoc.transform.LookAt(targetPostition);
-
-
-        cooldownTimer -= 0.03f;
-        summonCooldownTimer -= 0.03f;
-
-
-        if ((distanceX > -8.0 && distanceX < 8.0) && (distanceZ > -8.0 && distanceZ < 8.0) && cooldownTimer < 0.01f)
-        {
-            agent.SetDestination(target.transform.position);
-            anim.SetTrigger("isAttacking");
-            //we are in range. Start shooting
-            Debug.Log("Caster is readying a fireball!");
-            Instantiate(objToSpawn, CasterSpawnLoc.transform.position, CasterSpawnLoc.transform.rotation);
-            cooldownTimer = cooldown;
-            Instantiate(CasterSpecEffect, this.transform.position, this.transform.rotation);
-
-        }
-        // when you're in range but on cooldown
-        else if ((distanceX > -8.0 && distanceX < 8.0) && (distanceZ > -8.0 && distanceZ < 8.0) && cooldownTimer > 0.01f)
-        {
-            FlameEffect.gameObject.SetActive(true);
-            anim.SetTrigger("isIdle");
-            anim.SetBool("IsNotInRange", false);
-        }
-        else
-        {
-            if (agent.isActiveAndEnabled)
-            {
-                anim.SetBool("IsNotInRange", true);
-                FlameEffect.gameObject.SetActive(false);
-                agent.SetDestination(target.transform.position);
-            }
-
-        }
-
-    }
+   
 
 }
