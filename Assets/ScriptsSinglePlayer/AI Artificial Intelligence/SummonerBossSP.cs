@@ -42,6 +42,8 @@ public class SummonerBossSP : MonoBehaviour
 
     //get location of character!
     public GameObject target;
+    public GameObject fleeDestination;
+
     public float distanceX;
     public float distanceZ;
     public float distanceY;
@@ -64,6 +66,7 @@ public class SummonerBossSP : MonoBehaviour
     public GameObject AggroSpecEffect;
     public ParticleSystem IceEffect; //The  shader displayed when casting!
     public GameObject vampireEnemy;
+    public GameObject SE_Heal;
 
     //LOOT
     public GameObject RedBattery;
@@ -120,26 +123,37 @@ public class SummonerBossSP : MonoBehaviour
         if (isAggroed)
         {
 
-            if (bossHealth > 10 && (distanceX < -8.0 || distanceX > 8.0) && (distanceZ < -8.0 || distanceZ > 8.0))
+            if (bossHealth > 10 && (distanceX < -8.0 || distanceX > 8.0) && (distanceZ < -8.0 || distanceZ > 8.0) && !gameState_Fleeing && !gameState_Healing)
             {
                 Behaviour_MovingToTarget();
             }
-            else if (bossHealth > 10)
+            else if (bossHealth > 10 && !gameState_Fleeing && !gameState_Healing)
             {
                 Behaviour_InRangeAttacking();
             }
-            
-        }
-        //if ()
-        //{
+            else
+            {
+                gameState_Fleeing = true;
+                gameState_Healing = false; gameState_InRangeAttacking = false; gameState_MovingToTarget = false;
+            }
 
-        //}
+            if (gameState_Fleeing)
+            {
+                Behaviour_Fleeing();
+            }
+
+            if (gameState_Healing)
+            {
+                Behaviour_Healing();
+            }
+        }
+      
 
     }
 
     private void checkAggro()
     {
-        if (!gameState_Fleeing || !gameState_Healing)
+        if (!gameState_Fleeing && !gameState_Healing)
         {
 
 
@@ -158,13 +172,7 @@ public class SummonerBossSP : MonoBehaviour
         
     }
 
-    /*
-    gameState_OoC = true;
-    gameState_MovingToTarget = false;
-    gameState_InRangeAttacking = false;
-    gameState_Fleeing = false;
-    gameState_Healing = false;
-    */
+
 
     void Behaviour_MovingToTarget()
     {
@@ -195,7 +203,7 @@ public class SummonerBossSP : MonoBehaviour
         if ((distanceX > -8.0 && distanceX < 8.0) && (distanceZ > -8.0 && distanceZ < 8.0) && cooldownTimer < 0.01f)
         {
 
-            
+            gameState_InRangeAttacking = true;
 
             int randomNum = Random.Range(1, 18);
             
@@ -235,7 +243,7 @@ public class SummonerBossSP : MonoBehaviour
         else if ((distanceX > -8.0 && distanceX < 8.0) && (distanceZ > -8.0 && distanceZ < 8.0) && cooldownTimer > 0.01f)
         {
             IceEffect.gameObject.SetActive(true);
-            anim.SetTrigger("isIdle");
+            //anim.SetTrigger("isIdle");
             anim.SetBool("IsNotInRange", false);
         }
         else
@@ -252,28 +260,54 @@ public class SummonerBossSP : MonoBehaviour
 
     void Behaviour_Fleeing()
     {
-
+        //move away from player
+        agent.speed = 8.0f;
+        anim.SetBool("IsNotInRange", true);
+        agent.SetDestination(fleeDestination.transform.position);      
+        
+        if ((distanceX < -17.0 || distanceX > 17.0) && (distanceZ < -17.0 || distanceZ > 17.0))
+        {
+            gameState_Healing = true;
+            gameState_Fleeing = false; gameState_InRangeAttacking = false; gameState_MovingToTarget = false;
+            
+        }
     }
 
     void Behaviour_Healing()
     {
+        agent.speed = 4.0f;
+        anim.SetBool("IsNotInRange", false);
 
-    }
+        Debug.Log("SUMMONER IS HEALING");
+        agent.ResetPath();
+        if (bossHealth <= 50 && cooldownTimer < 0.01f)
+        {
+            Instantiate(SE_Heal, this.transform.position, this.transform.rotation);
+            anim.SetTrigger("isHealing");
+            bossHealth += 6;
+            cooldownTimer = cooldown;
 
-    void moveToPlayer()
-    {
+        }
+        else if (bossHealth > 50)
+        {
+            anim.SetBool("IsNotInRange", true);
 
-      
+            gameState_MovingToTarget = true;
+            gameState_Healing = false; gameState_InRangeAttacking = false; gameState_MovingToTarget = false;
+        }
         
-
     }
+
+
 
 
     public void OnCollisionEnter(Collision other)
     {
+        Debug.Log("Summoner boss health is " + bossHealth);
         //case when your player projectile hits the caster
         if (other.gameObject.name.Contains("Shot"))
         {
+            
             isAggroed = true;
             if (other.gameObject.name.Contains("PlayerShot"))
             {

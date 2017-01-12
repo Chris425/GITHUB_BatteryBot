@@ -280,7 +280,7 @@ public class CasterFollowBossSP : MonoBehaviour
         else if ((distanceX > -8.0 && distanceX < 8.0) && (distanceZ > -8.0 && distanceZ < 8.0) && cooldownTimer > 0.01f)
         {
             FlameEffect.gameObject.SetActive(true);
-            anim.SetTrigger("isIdle");
+            //anim.SetTrigger("isIdle");
             anim.SetBool("IsNotInRange", false);
         }
         else

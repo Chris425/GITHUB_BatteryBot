@@ -31,6 +31,7 @@ public class MeleeFollowSP : MonoBehaviour
     public static bool isAggroed;
 
     public int health = 2;
+    public int vampireDamage = 20;
 
 
     void OnEnable()
@@ -220,11 +221,11 @@ public class MeleeFollowSP : MonoBehaviour
             Debug.Log("Energy vampire is draining your battery!!!");
             if (HeroControllerSP.hasShield && HeroControllerSP.isSlot4)
             {
-                HeroControllerSP.battery -= 10;
+                HeroControllerSP.battery -= (vampireDamage - 5);
             }
             else
             {
-                HeroControllerSP.battery -= 20;
+                HeroControllerSP.battery -= vampireDamage;
             }
             
             cooldownTimer = cooldown;
