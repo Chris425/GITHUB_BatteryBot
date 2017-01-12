@@ -48,7 +48,7 @@ public class SummonerBossSP : MonoBehaviour
     public float distanceZ;
     public float distanceY;
     private float cooldown = 5.5f;
-    private float summonCooldown = 9.0f; // different from attack cd
+    private float summonCooldown = 8.5f; // different from attack cd
     private int maxNumEnemies = 5;
 
     private float cooldownTimer;
@@ -137,6 +137,7 @@ public class SummonerBossSP : MonoBehaviour
                 gameState_Healing = false; gameState_InRangeAttacking = false; gameState_MovingToTarget = false;
             }
 
+            
             if (gameState_Fleeing)
             {
                 Behaviour_Fleeing();
@@ -190,6 +191,16 @@ public class SummonerBossSP : MonoBehaviour
         agent.SetDestination(target.transform.position);
 
         anim.SetBool("IsNotInRange", true);
+
+         if ( maxNumEnemies < 10 && cooldownTimer < 0.01f)
+        {
+            //summon as she walks
+            anim.SetTrigger("isSummoning");
+            Instantiate(vampireEnemy, CasterSpawnLoc.transform.position, CasterSpawnLoc.transform.rotation);
+            cooldownTimer = summonCooldown;
+        }
+
+
     }
 
     void Behaviour_InRangeAttacking()
@@ -265,7 +276,7 @@ public class SummonerBossSP : MonoBehaviour
         anim.SetBool("IsNotInRange", true);
         agent.SetDestination(fleeDestination.transform.position);      
         
-        if ((distanceX < -17.0 || distanceX > 17.0) && (distanceZ < -17.0 || distanceZ > 17.0))
+        if ((distanceX < -17.0 || distanceX > 17.0) || (distanceZ < -17.0 || distanceZ > 17.0))
         {
             gameState_Healing = true;
             gameState_Fleeing = false; gameState_InRangeAttacking = false; gameState_MovingToTarget = false;
@@ -277,14 +288,14 @@ public class SummonerBossSP : MonoBehaviour
     {
         agent.speed = 4.0f;
         anim.SetBool("IsNotInRange", false);
-
-        Debug.Log("SUMMONER IS HEALING");
+        
         agent.ResetPath();
         if (bossHealth <= 50 && cooldownTimer < 0.01f)
         {
             Instantiate(SE_Heal, this.transform.position, this.transform.rotation);
             anim.SetTrigger("isHealing");
-            bossHealth += 6;
+            bossHealth += 8;
+            Debug.Log("Summoner boss health is " + bossHealth);
             cooldownTimer = cooldown;
 
         }

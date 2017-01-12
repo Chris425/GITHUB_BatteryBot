@@ -32,7 +32,7 @@ public class MeleeFollowSP : MonoBehaviour
 
     public int health = 2;
     public int vampireDamage = 20;
-
+    public bool isSummoned = false;
 
     void OnEnable()
     {
@@ -42,7 +42,17 @@ public class MeleeFollowSP : MonoBehaviour
         anim = this.GetComponentInChildren<Animator>();
         anim.applyRootMotion = false;
         anim.SetBool("IsAggroed",false);
-        isAggroed = false;
+
+        if (isSummoned)
+        {
+            isAggroed = true;
+            anim.SetBool("IsAggroed", true);
+        }
+        else
+        {
+            isAggroed = false;
+        }
+        
         shouldPlayAggroEffect = true;
     }
 
@@ -101,52 +111,58 @@ public class MeleeFollowSP : MonoBehaviour
                 health -= 2;
                 Instantiate(DeathSpecEffect, other.transform.position, this.transform.rotation);
             }
-            //possibly spawn some loot!
+            //Only spawn loot if it is a normal vampire, not a summoned one.
 
             if (health <= 0)
             {
                 //vampire is dead
                 Destroy(this.gameObject);
-                int randomNum = Random.Range(1, 14);
-                if (randomNum <= 2)
-                {
-                    int posOffset = Random.Range(-4, 4);
-                    int rotOffset1 = Random.Range(1, 180);
-                    int rotOffset2 = Random.Range(1, 180);
-                    Vector3 spawnPos = new Vector3(this.transform.position.x, this.transform.position.y + posOffset, this.transform.position.z);
-                    Quaternion spawnRot = new Quaternion(this.transform.rotation.x + rotOffset1, this.transform.rotation.y + rotOffset2, this.transform.rotation.z + rotOffset1, this.transform.rotation.w + rotOffset2);
-                    Instantiate(RedBattery, spawnPos, spawnRot);
 
-                }
-                else if (randomNum == 3 || randomNum == 4)
+                if (!isSummoned)
                 {
-                    int posOffset = Random.Range(-4, 4);
-                    int rotOffset1 = Random.Range(1, 180);
-                    int rotOffset2 = Random.Range(1, 180);
-                    Vector3 spawnPos = new Vector3(this.transform.position.x, this.transform.position.y + posOffset, this.transform.position.z);
-                    Quaternion spawnRot = new Quaternion(this.transform.rotation.x + rotOffset1, this.transform.rotation.y + rotOffset2, this.transform.rotation.z + rotOffset1, this.transform.rotation.w + rotOffset2);
-                    Instantiate(GreenBattery, spawnPos, spawnRot);
 
-                }
-                else if (randomNum == 5)
-                {
-                    int posOffset = Random.Range(1, 3);
-                    int rotOffset1 = Random.Range(1, 180);
-                    int rotOffset2 = Random.Range(1, 180);
-                    Vector3 spawnPos = new Vector3(this.transform.position.x, this.transform.position.y + posOffset, this.transform.position.z);
-                    Quaternion spawnRot = new Quaternion(this.transform.rotation.x + rotOffset1, this.transform.rotation.y + rotOffset2, this.transform.rotation.z + rotOffset1, this.transform.rotation.w + rotOffset2);
-                    Instantiate(GunDrop, spawnPos, spawnRot);
 
-                }
-                else if (randomNum == 6)
-                {
-                    int posOffset = Random.Range(1, 3);
-                    int rotOffset1 = Random.Range(1, 180);
-                    int rotOffset2 = Random.Range(1, 180);
-                    Vector3 spawnPos = new Vector3(this.transform.position.x, this.transform.position.y + posOffset, this.transform.position.z);
-                    Quaternion spawnRot = new Quaternion(this.transform.rotation.x + rotOffset1, this.transform.rotation.y + rotOffset2, this.transform.rotation.z + rotOffset1, this.transform.rotation.w + rotOffset2);
-                    Instantiate(Gear, spawnPos, spawnRot);
+                    int randomNum = Random.Range(1, 14);
+                    if (randomNum <= 2)
+                    {
+                        int posOffset = Random.Range(-4, 4);
+                        int rotOffset1 = Random.Range(1, 180);
+                        int rotOffset2 = Random.Range(1, 180);
+                        Vector3 spawnPos = new Vector3(this.transform.position.x, this.transform.position.y + posOffset, this.transform.position.z);
+                        Quaternion spawnRot = new Quaternion(this.transform.rotation.x + rotOffset1, this.transform.rotation.y + rotOffset2, this.transform.rotation.z + rotOffset1, this.transform.rotation.w + rotOffset2);
+                        Instantiate(RedBattery, spawnPos, spawnRot);
 
+                    }
+                    else if (randomNum == 3 || randomNum == 4)
+                    {
+                        int posOffset = Random.Range(-4, 4);
+                        int rotOffset1 = Random.Range(1, 180);
+                        int rotOffset2 = Random.Range(1, 180);
+                        Vector3 spawnPos = new Vector3(this.transform.position.x, this.transform.position.y + posOffset, this.transform.position.z);
+                        Quaternion spawnRot = new Quaternion(this.transform.rotation.x + rotOffset1, this.transform.rotation.y + rotOffset2, this.transform.rotation.z + rotOffset1, this.transform.rotation.w + rotOffset2);
+                        Instantiate(GreenBattery, spawnPos, spawnRot);
+
+                    }
+                    else if (randomNum == 5)
+                    {
+                        int posOffset = Random.Range(1, 3);
+                        int rotOffset1 = Random.Range(1, 180);
+                        int rotOffset2 = Random.Range(1, 180);
+                        Vector3 spawnPos = new Vector3(this.transform.position.x, this.transform.position.y + posOffset, this.transform.position.z);
+                        Quaternion spawnRot = new Quaternion(this.transform.rotation.x + rotOffset1, this.transform.rotation.y + rotOffset2, this.transform.rotation.z + rotOffset1, this.transform.rotation.w + rotOffset2);
+                        Instantiate(GunDrop, spawnPos, spawnRot);
+
+                    }
+                    else if (randomNum == 6)
+                    {
+                        int posOffset = Random.Range(1, 3);
+                        int rotOffset1 = Random.Range(1, 180);
+                        int rotOffset2 = Random.Range(1, 180);
+                        Vector3 spawnPos = new Vector3(this.transform.position.x, this.transform.position.y + posOffset, this.transform.position.z);
+                        Quaternion spawnRot = new Quaternion(this.transform.rotation.x + rotOffset1, this.transform.rotation.y + rotOffset2, this.transform.rotation.z + rotOffset1, this.transform.rotation.w + rotOffset2);
+                        Instantiate(Gear, spawnPos, spawnRot);
+
+                    }
                 }
             }
 
@@ -170,7 +186,12 @@ public class MeleeFollowSP : MonoBehaviour
         distanceX = this.transform.position.x - target.transform.position.x;
         distanceZ = this.transform.position.z - target.transform.position.z;
         distanceY = this.transform.position.y - target.transform.position.y;
-        checkAggro();
+
+        if (!isSummoned)
+        {
+            checkAggro();
+        }
+        
 
         if (isAggroed)
         {
@@ -194,7 +215,7 @@ public class MeleeFollowSP : MonoBehaviour
             }
         }
         //if you have aggroed, then ran away, and you're too far he gives up
-        else if ((distanceX < -45 || distanceX > 45) || (distanceZ < -45 || distanceZ > 45) || (distanceY < -10 || distanceY > 10))
+        else if ((distanceX < -45 || distanceX > 45) || (distanceZ < -45 || distanceZ > 45) || (distanceY < -10 || distanceY > 10) && !isSummoned)
         {
             isAggroed = false;
             anim.SetBool("IsAggroed", false);
