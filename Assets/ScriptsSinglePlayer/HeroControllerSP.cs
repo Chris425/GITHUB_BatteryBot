@@ -17,6 +17,7 @@ public class HeroControllerSP : MonoBehaviour
     public static int currScene;
 
     public GameObject SE_hit;
+    public GameObject SE_hit_ice;
     public ParticleSystem IdleGasStream;
     public ParticleSystem WorkingGasStream;
     public GameObject GreatswordFire;
@@ -188,7 +189,13 @@ public class HeroControllerSP : MonoBehaviour
         if (other.gameObject.name.Contains("CasterShot"))
         {
             Instantiate(SE_hit, this.transform.position, this.transform.rotation);
-            battery -= 15;
+            battery -= 10;
+            Destroy(other.gameObject);
+        }
+        if (other.gameObject.name.Contains("SummonerShot"))
+        {
+            Instantiate(SE_hit_ice, this.transform.position, this.transform.rotation);
+            battery -= 2;
             Destroy(other.gameObject);
         }
     }

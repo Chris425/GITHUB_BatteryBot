@@ -122,6 +122,7 @@
     <Compile Include="Assets\ScriptsSinglePlayer\PlatformMotions\FloatingObject_GentleMovement.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\PlatformMotions\ForwardsBackwards.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\PlatformMotions\GentleMovement2.cs" />
+    <Compile Include="Assets\ScriptsSinglePlayer\PlatformMotions\SE_Hit_Ice_Rot.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\PowerUpRotatorSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\SE_DespawnSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\SelfDestructSP.cs" />

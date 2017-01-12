@@ -45,7 +45,7 @@ public class SummonerBossSP : MonoBehaviour
     public float distanceX;
     public float distanceZ;
     public float distanceY;
-    private float cooldown = 3.5f;
+    private float cooldown = 5.5f;
     private float summonCooldown = 9.0f; // different from attack cd
     private int maxNumEnemies = 5;
 
@@ -58,10 +58,12 @@ public class SummonerBossSP : MonoBehaviour
     public GameObject CasterSpecEffect;
     public GameObject CasterSpawnLoc;
     public GameObject objToSpawn;
+    public GameObject objToSpawnIce;
     public GameObject DeathSpecEffect;
     public GameObject BloodSpecEffect;
     public GameObject AggroSpecEffect;
-    public ParticleSystem FlameEffect; //The fire shader displayed when casting!
+    public ParticleSystem IceEffect; //The  shader displayed when casting!
+    public GameObject vampireEnemy;
 
     //LOOT
     public GameObject RedBattery;
@@ -102,7 +104,7 @@ public class SummonerBossSP : MonoBehaviour
         anim.SetBool("IsAggroed", false);
         isAggroed = false;
         shouldPlayAggroEffect = true;
-        FlameEffect.gameObject.SetActive(false);
+        IceEffect.gameObject.SetActive(false);
     }
 
     void Update()
@@ -118,16 +120,20 @@ public class SummonerBossSP : MonoBehaviour
         if (isAggroed)
         {
 
-            if (bossHealth > 10 && (distanceX < -8.0 && distanceX > 8.0) && (distanceZ < -8.0 && distanceZ > 8.0))
+            if (bossHealth > 10 && (distanceX < -8.0 || distanceX > 8.0) && (distanceZ < -8.0 || distanceZ > 8.0))
             {
                 Behaviour_MovingToTarget();
             }
-            else
+            else if (bossHealth > 10)
             {
                 Behaviour_InRangeAttacking();
             }
             
         }
+        //if ()
+        //{
+
+        //}
 
     }
 
@@ -174,6 +180,8 @@ public class SummonerBossSP : MonoBehaviour
 
 
         agent.SetDestination(target.transform.position);
+
+        anim.SetBool("IsNotInRange", true);
     }
 
     void Behaviour_InRangeAttacking()
@@ -187,18 +195,46 @@ public class SummonerBossSP : MonoBehaviour
         if ((distanceX > -8.0 && distanceX < 8.0) && (distanceZ > -8.0 && distanceZ < 8.0) && cooldownTimer < 0.01f)
         {
 
-            anim.SetTrigger("isAttacking");
-            //we are in range. Start shooting
-            Debug.Log("Caster is readying a fireball!");
-            Instantiate(objToSpawn, CasterSpawnLoc.transform.position, CasterSpawnLoc.transform.rotation);
-            cooldownTimer = cooldown;
-            Instantiate(CasterSpecEffect, this.transform.position, this.transform.rotation);
+            
+
+            int randomNum = Random.Range(1, 18);
+            
+            //find total number of enemies
+            // ......
+
+
+            if (randomNum <= 10 && cooldownTimer < 0.01f)
+            {
+                anim.SetTrigger("isAttacking");
+                //No cooldown... ice shots will be fast to make this boss more frightening and random
+                Instantiate(objToSpawnIce, CasterSpawnLoc.transform.position, CasterSpawnLoc.transform.rotation);
+                Instantiate(CasterSpecEffect, this.transform.position, this.transform.rotation);
+                cooldownTimer = 0.3f;
+
+            }
+            else if (randomNum > 10 && randomNum < 13 && maxNumEnemies < 10 && cooldownTimer < 0.01f)
+            {
+                //summon
+                anim.SetTrigger("isSummoning");
+                Instantiate(vampireEnemy, CasterSpawnLoc.transform.position, CasterSpawnLoc.transform.rotation);
+                cooldownTimer = summonCooldown;
+            }
+
+            else if(cooldownTimer < 0.01f)
+            {
+                anim.SetTrigger("isAttacking");
+                //we are in range. Start shooting
+                Instantiate(objToSpawn, CasterSpawnLoc.transform.position, CasterSpawnLoc.transform.rotation);
+                cooldownTimer = cooldown;
+                Instantiate(CasterSpecEffect, this.transform.position, this.transform.rotation);
+            }
+            
 
         }
         // when you're in range but on cooldown
         else if ((distanceX > -8.0 && distanceX < 8.0) && (distanceZ > -8.0 && distanceZ < 8.0) && cooldownTimer > 0.01f)
         {
-            FlameEffect.gameObject.SetActive(true);
+            IceEffect.gameObject.SetActive(true);
             anim.SetTrigger("isIdle");
             anim.SetBool("IsNotInRange", false);
         }
@@ -207,7 +243,7 @@ public class SummonerBossSP : MonoBehaviour
             if (agent.isActiveAndEnabled)
             {
                 anim.SetBool("IsNotInRange", true);
-                FlameEffect.gameObject.SetActive(false);
+                IceEffect.gameObject.SetActive(false);
                 agent.SetDestination(target.transform.position);
             }
 
