@@ -93,9 +93,12 @@
     <Compile Include="Assets\PrefabsSP\RainMaker\Prefab\RainCollision.cs" />
     <Compile Include="Assets\PrefabsSP\RainMaker\Prefab\RainScript.cs" />
     <Compile Include="Assets\PrefabsSP\RainMaker\Prefab\RainScript2D.cs" />
+    <Compile Include="Assets\ScriptsSinglePlayer\AI Artificial Intelligence\CasterFollowBossSP.cs" />
+    <Compile Include="Assets\ScriptsSinglePlayer\AI Artificial Intelligence\MeleeFollowBossSP.cs" />
+    <Compile Include="Assets\ScriptsSinglePlayer\AI Artificial Intelligence\MeleeFollowSP.cs" />
+    <Compile Include="Assets\ScriptsSinglePlayer\AI Artificial Intelligence\SummonerBossSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\BatterySpawnerSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\BreathingGlowSP.cs" />
-    <Compile Include="Assets\ScriptsSinglePlayer\CasterFollowBossSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\CharacterControls.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\ControlsSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\EnemySpawnerSP.cs" />
@@ -103,8 +106,6 @@
     <Compile Include="Assets\ScriptsSinglePlayer\GameOverSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\GetScoreSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\HeroControllerSP.cs" />
-    <Compile Include="Assets\ScriptsSinglePlayer\MeleeFollowBossSP.cs" />
-    <Compile Include="Assets\ScriptsSinglePlayer\MeleeFollowSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\Mixins\Data\DataSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\Mixins\Data\IntDataSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\Mixins\MixinSP.cs" />

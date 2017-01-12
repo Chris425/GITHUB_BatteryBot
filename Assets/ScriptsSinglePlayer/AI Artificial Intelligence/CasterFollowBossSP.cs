@@ -256,7 +256,8 @@ public class CasterFollowBossSP : MonoBehaviour
         CasterSpawnLoc.transform.LookAt(targetPostition);
 
         //let the caster face the player at all times
-        this.transform.LookAt(targetPostition);
+        //this.transform.LookAt(targetPostition);
+        CasterSpawnLoc.transform.LookAt(targetPostition);
 
 
         cooldownTimer -= 0.03f;
@@ -270,7 +271,7 @@ public class CasterFollowBossSP : MonoBehaviour
             anim.SetTrigger("isAttacking");
             //we are in range. Start shooting
             Debug.Log("Caster is readying a fireball!");
-            Instantiate(objToSpawn, CasterSpawnLoc.transform.position, this.transform.rotation);
+            Instantiate(objToSpawn, CasterSpawnLoc.transform.position, CasterSpawnLoc.transform.rotation);
             cooldownTimer = cooldown;
             Instantiate(CasterSpecEffect, this.transform.position, this.transform.rotation);
                   
