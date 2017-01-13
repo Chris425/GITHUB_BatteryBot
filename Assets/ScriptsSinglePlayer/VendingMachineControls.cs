@@ -16,6 +16,12 @@ public class VendingMachineControls : MonoBehaviour {
     public GameObject slot4Item;
     public GameObject slot5Item;
 
+    public int slot1Cost = 2;
+    public int slot2Cost = 2;
+    public int slot3Cost = 5;
+    public int slot4Cost = 3;
+    public int slot5Cost = 1;
+
 
     void Awake()
     {
@@ -36,10 +42,10 @@ public class VendingMachineControls : MonoBehaviour {
 
             if (whichControllerNumberAmI == 1)
             {
-                if (HeroControllerSP.Gears >= 2)
+                if (HeroControllerSP.Gears >= slot1Cost)
                 {
                     source.PlayOneShot(switchHit, 1.0f);
-                    HeroControllerSP.Gears -= 2;
+                    HeroControllerSP.Gears -= slot1Cost;
                     Instantiate(slot1Item, spawnLoc.transform.position, spawnLoc.transform.rotation);
                     Instantiate(SE_Explosion, spawnLoc.transform.position, spawnLoc.transform.rotation);
                 }
@@ -52,10 +58,10 @@ public class VendingMachineControls : MonoBehaviour {
             else if (whichControllerNumberAmI == 2)
             {
                 
-                if (HeroControllerSP.Gears >= 2)
+                if (HeroControllerSP.Gears >= slot2Cost)
                 {
                     source.PlayOneShot(switchHit, 1.0f);
-                    HeroControllerSP.Gears -= 2;
+                    HeroControllerSP.Gears -= slot2Cost;
                     Instantiate(slot2Item, spawnLoc.transform.position, spawnLoc.transform.rotation);
                     Instantiate(SE_Explosion, spawnLoc.transform.position, spawnLoc.transform.rotation);
                 }
@@ -68,10 +74,10 @@ public class VendingMachineControls : MonoBehaviour {
             else if (whichControllerNumberAmI == 3)
             {
                 
-                if (HeroControllerSP.Gears >= 5)
+                if (HeroControllerSP.Gears >= slot3Cost)
                 {
                     source.PlayOneShot(switchHit, 1.0f);
-                    HeroControllerSP.Gears -= 5;
+                    HeroControllerSP.Gears -= slot3Cost;
                     Instantiate(slot3Item, spawnLoc.transform.position, spawnLoc.transform.rotation);
                     Instantiate(SE_Explosion, spawnLoc.transform.position, spawnLoc.transform.rotation);
                 }
@@ -84,10 +90,10 @@ public class VendingMachineControls : MonoBehaviour {
 
             else if (whichControllerNumberAmI == 4)
             {                
-                if (HeroControllerSP.Gears >= 3)
+                if (HeroControllerSP.Gears >= slot4Cost)
                 {
                     source.PlayOneShot(switchHit, 1.0f);
-                    HeroControllerSP.Gears -= 3;
+                    HeroControllerSP.Gears -= slot4Cost;
                     Instantiate(slot4Item, spawnLoc.transform.position, spawnLoc.transform.rotation);
                     Instantiate(SE_Explosion, spawnLoc.transform.position, spawnLoc.transform.rotation);
                 }
@@ -100,10 +106,10 @@ public class VendingMachineControls : MonoBehaviour {
             else if (whichControllerNumberAmI == 5)
             {
                 
-                if (HeroControllerSP.Gears >= 1)
+                if (HeroControllerSP.Gears >= slot5Cost)
                 {
                     source.PlayOneShot(switchHit, 1.0f);
-                    HeroControllerSP.Gears -= 1;
+                    HeroControllerSP.Gears -= slot5Cost;
                     Instantiate(slot5Item, spawnLoc.transform.position, spawnLoc.transform.rotation);
                     Instantiate(SE_Explosion, spawnLoc.transform.position, spawnLoc.transform.rotation);
                 }
