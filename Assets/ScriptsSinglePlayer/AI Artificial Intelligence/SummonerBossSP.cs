@@ -47,9 +47,10 @@ public class SummonerBossSP : MonoBehaviour
     public float distanceX;
     public float distanceZ;
     public float distanceY;
-    private float cooldown = 5.5f;
-    private float summonCooldown = 8.5f; // different from attack cd
-    private int maxNumEnemies = 5;
+    private float cooldown = 4.5f;
+    private float summonCooldown = 7.5f; // different from attack cd
+    private int maxNumEnemies = 10;
+    private int currNumEnemies = 0;
 
     private float cooldownTimer;
     private float summonCooldownTimer;
@@ -182,17 +183,17 @@ public class SummonerBossSP : MonoBehaviour
                                        target.transform.position.y,
                                        target.transform.position.z);
         CasterSpawnLoc.transform.LookAt(targetPostition);
+        this.transform.LookAt(targetPostition);
 
         //let the caster face the player at all times
-        this.transform.LookAt(targetPostition);
-        CasterSpawnLoc.transform.LookAt(targetPostition);
+        
 
 
         agent.SetDestination(target.transform.position);
 
         anim.SetBool("IsNotInRange", true);
 
-         if ( maxNumEnemies < 10 && cooldownTimer < 0.01f)
+         if (currNumEnemies < maxNumEnemies && cooldownTimer < 0.01f)
         {
             //summon as she walks
             anim.SetTrigger("isSummoning");
@@ -216,13 +217,13 @@ public class SummonerBossSP : MonoBehaviour
 
             gameState_InRangeAttacking = true;
 
-            int randomNum = Random.Range(1, 18);
+            int randomNum = Random.Range(1, 20);
             
             //find total number of enemies
             // ......
 
 
-            if (randomNum <= 10 && cooldownTimer < 0.01f)
+            if (randomNum <= 12 && cooldownTimer < 0.01f)
             {
                 anim.SetTrigger("isAttacking");
                 //No cooldown... ice shots will be fast to make this boss more frightening and random
@@ -231,7 +232,7 @@ public class SummonerBossSP : MonoBehaviour
                 cooldownTimer = 0.3f;
 
             }
-            else if (randomNum > 10 && randomNum < 13 && maxNumEnemies < 10 && cooldownTimer < 0.01f)
+            else if (randomNum > 12 && randomNum < 15 && currNumEnemies < maxNumEnemies && cooldownTimer < 0.01f)
             {
                 //summon
                 anim.SetTrigger("isSummoning");

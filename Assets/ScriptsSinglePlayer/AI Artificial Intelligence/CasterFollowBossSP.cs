@@ -257,6 +257,7 @@ public class CasterFollowBossSP : MonoBehaviour
 
         //let the caster face the player at all times
         //this.transform.LookAt(targetPostition);
+        this.transform.LookAt(targetPostition);
         CasterSpawnLoc.transform.LookAt(targetPostition);
 
 
