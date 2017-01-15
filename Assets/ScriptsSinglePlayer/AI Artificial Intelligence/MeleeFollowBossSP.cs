@@ -12,7 +12,7 @@ public class MeleeFollowBossSP : MonoBehaviour
     public float distanceY;
     private float cooldown = 6.0f;
     private float cooldownTimer;
-    public int bossHealth = 8;
+    public int bossHealth = 10;
     bool shouldPlayAggroEffect = false;
     Quaternion aggroRot = new Quaternion(0.0f, 180.0f, 180.0f, 0.0f);
 

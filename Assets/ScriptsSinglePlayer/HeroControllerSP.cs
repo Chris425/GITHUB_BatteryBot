@@ -192,7 +192,7 @@ public class HeroControllerSP : MonoBehaviour
             battery -= 10;
             Destroy(other.gameObject);
         }
-        if (other.gameObject.name.Contains("SummonerShot"))
+        if (other.gameObject.name.Contains("SummonerShot") || other.gameObject.name.Contains("WizardShot"))
         {
             Instantiate(SE_hit_ice, this.transform.position, this.transform.rotation);
             battery -= 2;

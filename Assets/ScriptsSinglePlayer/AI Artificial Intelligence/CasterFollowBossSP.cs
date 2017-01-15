@@ -12,7 +12,7 @@ public class CasterFollowBossSP : MonoBehaviour
     public float distanceY;
     private float cooldown = 5.0f;
     private float cooldownTimer;
-    public int bossHealth = 5;
+    public int bossHealth = 8;
     bool shouldPlayAggroEffect = false;
     Quaternion aggroRot = new Quaternion(0.0f, 180.0f, 180.0f, 0.0f);
 

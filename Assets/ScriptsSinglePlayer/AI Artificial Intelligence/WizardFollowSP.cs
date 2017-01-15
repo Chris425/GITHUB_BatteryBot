@@ -7,14 +7,13 @@ public class WizardFollowSP : MonoBehaviour
     private Animator anim;
     NavMeshAgent agent;
     
-    private int bossHealth = 50;
+    private int bossHealth = 20;
 
     //gamestates correspond to behaviour methods. Only one can be active at a time.
     public bool gameState_OoC;
     public bool gameState_MovingToTarget;
     public bool gameState_InRangeAttacking;
-    public bool gameState_Fleeing;
-    public bool gameState_Healing;
+    public bool gameState_FindCover;
 
 
     //get location of character!
@@ -24,18 +23,16 @@ public class WizardFollowSP : MonoBehaviour
     public float distanceX;
     public float distanceZ;
     public float distanceY;
-    private float cooldown = 4.5f;
-    private float summonCooldown = 7.5f; // different from attack cd
-    private int maxNumEnemies = 10;
-    private int currNumEnemies = 0;
+    private float cooldown = 3.5f;
+    private float IceBlastCooldown = 5.0f; // different from attack cd
+    private float shieldCooldown = 8.0f;
 
     private float cooldownTimer;
-    private float summonCooldownTimer;
+    private float IceBlastCooldownTimer;
     
     bool shouldPlayAggroEffect = false;
     Quaternion aggroRot = new Quaternion(0.0f, 180.0f, 180.0f, 0.0f);
-
-    public GameObject CasterSpecEffect;
+    
     public GameObject CasterSpawnLoc;
     public GameObject objToSpawn;
     public GameObject objToSpawnIce;
@@ -43,8 +40,8 @@ public class WizardFollowSP : MonoBehaviour
     public GameObject BloodSpecEffect;
     public GameObject AggroSpecEffect;
     public ParticleSystem IceEffect; //The  shader displayed when casting!
-    public GameObject vampireEnemy;
-    public GameObject SE_Heal;
+    public GameObject IceBlastMulti;
+    public GameObject IceShield;
 
     //LOOT
     public GameObject RedBattery;
@@ -73,8 +70,7 @@ public class WizardFollowSP : MonoBehaviour
         gameState_OoC = true;
         gameState_MovingToTarget = false;
         gameState_InRangeAttacking = false;
-        gameState_Fleeing = false;
-        gameState_Healing = false;
+        gameState_FindCover = false;
 
 
         agent = GetComponent<NavMeshAgent>();
@@ -91,7 +87,7 @@ public class WizardFollowSP : MonoBehaviour
     void Update()
     {
         cooldownTimer -= 0.03f;
-        summonCooldownTimer -= 0.03f;
+        IceBlastCooldownTimer -= 0.03f;
 
         distanceX = this.transform.position.x - target.transform.position.x;
         distanceZ = this.transform.position.z - target.transform.position.z;
@@ -101,30 +97,26 @@ public class WizardFollowSP : MonoBehaviour
         if (isAggroed)
         {
 
-            if (bossHealth > 10 && (distanceX < -8.0 || distanceX > 8.0) && (distanceZ < -8.0 || distanceZ > 8.0) && !gameState_Fleeing && !gameState_Healing)
+            if (bossHealth > 6 && (distanceX < -8.0 || distanceX > 8.0) && (distanceZ < -8.0 || distanceZ > 8.0) && !gameState_FindCover)
             {
                 Behaviour_MovingToTarget();
             }
-            else if (bossHealth > 10 && !gameState_Fleeing && !gameState_Healing)
+            else if (bossHealth > 6 && !gameState_FindCover )
             {
                 Behaviour_InRangeAttacking();
             }
             else
             {
-                gameState_Fleeing = true;
-                gameState_Healing = false; gameState_InRangeAttacking = false; gameState_MovingToTarget = false;
+                gameState_FindCover = true;
+                gameState_InRangeAttacking = false; gameState_MovingToTarget = false;
             }
 
             
-            if (gameState_Fleeing)
+            if (gameState_FindCover)
             {
-                Behaviour_Fleeing();
+                Behaviour_FindCover();
             }
-
-            if (gameState_Healing)
-            {
-                Behaviour_Healing();
-            }
+            
         }
       
 
@@ -132,7 +124,7 @@ public class WizardFollowSP : MonoBehaviour
 
     private void checkAggro()
     {
-        if (!gameState_Fleeing && !gameState_Healing)
+        if (!gameState_FindCover)
         {
 
 
@@ -170,12 +162,14 @@ public class WizardFollowSP : MonoBehaviour
 
         anim.SetBool("IsNotInRange", true);
 
-         if (currNumEnemies < maxNumEnemies && cooldownTimer < 0.01f)
+        //make an ice shield as you walk over
+         if (cooldownTimer < 0.01f)
         {
-            //summon as she walks
-            anim.SetTrigger("isSummoning");
-            Instantiate(vampireEnemy, CasterSpawnLoc.transform.position, CasterSpawnLoc.transform.rotation);
-            cooldownTimer = summonCooldown;
+            anim.SetTrigger("isHealing");
+            Vector3 ShieldPos = new Vector3(this.transform.position.x, this.transform.position.y + 0.5f, this.transform.position.z);
+            GameObject myShield = Instantiate(IceShield, ShieldPos, this.transform.rotation) as GameObject;
+            myShield.transform.parent = GameObject.Find("Wizard").transform;
+            cooldownTimer = shieldCooldown;
         }
 
 
@@ -195,26 +189,30 @@ public class WizardFollowSP : MonoBehaviour
             gameState_InRangeAttacking = true;
 
             int randomNum = Random.Range(1, 20);
-            
-            //find total number of enemies
-            // ......
-
-
-            if (randomNum <= 12 && cooldownTimer < 0.01f)
+           
+            if (randomNum <= 6 && cooldownTimer < 0.01f)
             {
+                //Frozen orb!
                 anim.SetTrigger("isAttacking");
-                //No cooldown... ice shots will be fast to make this boss more frightening and random
-                Instantiate(objToSpawnIce, CasterSpawnLoc.transform.position, CasterSpawnLoc.transform.rotation);
-                Instantiate(CasterSpecEffect, this.transform.position, this.transform.rotation);
-                cooldownTimer = 0.3f;
+                Vector3 OrbPos = new Vector3(CasterSpawnLoc.transform.position.x, CasterSpawnLoc.transform.position.y - 1.0f, CasterSpawnLoc.transform.position.z);
+                Instantiate(objToSpawnIce, OrbPos, this.transform.rotation);
+                cooldownTimer = IceBlastCooldown;
 
             }
-            else if (randomNum > 12 && randomNum < 15 && currNumEnemies < maxNumEnemies && cooldownTimer < 0.01f)
+            else if(randomNum > 6 && randomNum < 12 && cooldownTimer < 0.01f)
             {
-                //summon
+                anim.SetTrigger("isHealing");
+                Vector3 ShieldPos = new Vector3(this.transform.position.x, this.transform.position.y + 0.5f, this.transform.position.z);
+                GameObject myShield = Instantiate(IceShield, ShieldPos, this.transform.rotation) as GameObject;
+                myShield.transform.parent = GameObject.Find("Wizard").transform;
+                cooldownTimer = shieldCooldown;
+            }
+            else if (randomNum >= 12 && randomNum < 17 && cooldownTimer < 0.01f)
+            {
+                //Ice Blast!
                 anim.SetTrigger("isSummoning");
-                Instantiate(vampireEnemy, CasterSpawnLoc.transform.position, CasterSpawnLoc.transform.rotation);
-                cooldownTimer = summonCooldown;
+                Instantiate(IceBlastMulti, target.transform.position, this.transform.rotation);
+                cooldownTimer = IceBlastCooldown;
             }
 
             else if(cooldownTimer < 0.01f)
@@ -223,7 +221,6 @@ public class WizardFollowSP : MonoBehaviour
                 //we are in range. Start shooting
                 Instantiate(objToSpawn, CasterSpawnLoc.transform.position, CasterSpawnLoc.transform.rotation);
                 cooldownTimer = cooldown;
-                Instantiate(CasterSpecEffect, this.transform.position, this.transform.rotation);
             }
             
 
@@ -247,52 +244,43 @@ public class WizardFollowSP : MonoBehaviour
         }
     }
 
-    void Behaviour_Fleeing()
+    void Behaviour_FindCover()
     {
         //move away from player
-        agent.speed = 8.0f;
+        agent.speed = 6.5f;
         anim.SetBool("IsNotInRange", true);
-        agent.SetDestination(fleeDestination.transform.position);      
-        
-        if ((distanceX < -17.0 || distanceX > 17.0) || (distanceZ < -17.0 || distanceZ > 17.0))
-        {
-            gameState_Healing = true;
-            gameState_Fleeing = false; gameState_InRangeAttacking = false; gameState_MovingToTarget = false;
-            
-        }
-    }
+        agent.SetDestination(fleeDestination.transform.position);
 
-    void Behaviour_Healing()
-    {
-        agent.speed = 4.0f;
-        anim.SetBool("IsNotInRange", false);
-        
-        agent.ResetPath();
-        if (bossHealth <= 50 && cooldownTimer < 0.01f)
+        //make ice shields as you run away too
+        if (cooldownTimer < 0.01f)
         {
-            Instantiate(SE_Heal, this.transform.position, this.transform.rotation);
             anim.SetTrigger("isHealing");
-            bossHealth += 8;
-            Debug.Log("Summoner boss health is " + bossHealth);
-            cooldownTimer = cooldown;
-
+            Vector3 ShieldPos = new Vector3(this.transform.position.x, this.transform.position.y + 0.5f, this.transform.position.z);
+            GameObject myShield = Instantiate(IceShield, ShieldPos, this.transform.rotation) as GameObject;
+            myShield.transform.parent = GameObject.Find("Wizard").transform;
+            cooldownTimer = shieldCooldown;
         }
-        else if (bossHealth > 50)
+
+        if ((distanceX < -30.0 || distanceX > 30.0) || (distanceZ < -30.0 || distanceZ > 30.0))
         {
-            anim.SetBool("IsNotInRange", true);
+            agent.speed = 4.0f;
+            anim.SetBool("IsNotInRange", false);
+            anim.SetBool("IsAggroed", false);
 
-            gameState_MovingToTarget = true;
-            gameState_Healing = false; gameState_InRangeAttacking = false; gameState_MovingToTarget = false;
+            agent.ResetPath();
+            //when far away enough, give up and lose aggro until player comes back again 
+            gameState_FindCover = false; gameState_InRangeAttacking = false; gameState_MovingToTarget = false;
+            isAggroed = false;
+            gameState_OoC = true;
         }
-        
     }
 
-
+    
 
 
     public void OnCollisionEnter(Collision other)
     {
-        Debug.Log("Summoner boss health is " + bossHealth);
+        Debug.Log("Wizard boss health is " + bossHealth);
         //case when your player projectile hits the caster
         if (other.gameObject.name.Contains("Shot"))
         {

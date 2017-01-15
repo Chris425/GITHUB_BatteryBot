@@ -104,9 +104,11 @@
     <Compile Include="Assets\ScriptsSinglePlayer\ControlsSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\EnemySpawnerSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\ExplosionEffectSP.cs" />
+    <Compile Include="Assets\ScriptsSinglePlayer\FrozenOrbSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\GameOverSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\GetScoreSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\HeroControllerSP.cs" />
+    <Compile Include="Assets\ScriptsSinglePlayer\IceBlockDestructionSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\Mixins\Data\DataSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\Mixins\Data\IntDataSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\Mixins\MixinSP.cs" />

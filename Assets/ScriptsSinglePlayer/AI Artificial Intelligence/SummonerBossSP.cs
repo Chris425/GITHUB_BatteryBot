@@ -47,8 +47,8 @@ public class SummonerBossSP : MonoBehaviour
     public float distanceX;
     public float distanceZ;
     public float distanceY;
-    private float cooldown = 4.5f;
-    private float summonCooldown = 7.5f; // different from attack cd
+    private float cooldown = 4.0f;
+    private float summonCooldown = 6.5f; // different from attack cd
     private int maxNumEnemies = 10;
     private int currNumEnemies = 0;
 
@@ -305,7 +305,7 @@ public class SummonerBossSP : MonoBehaviour
             anim.SetBool("IsNotInRange", true);
 
             gameState_MovingToTarget = true;
-            gameState_Healing = false; gameState_InRangeAttacking = false; gameState_MovingToTarget = false;
+            gameState_Healing = false; gameState_InRangeAttacking = false; gameState_Fleeing = false;
         }
         
     }
@@ -319,7 +319,8 @@ public class SummonerBossSP : MonoBehaviour
         //case when your player projectile hits the caster
         if (other.gameObject.name.Contains("Shot"))
         {
-            
+            //I'm keeping this isAggroed up here...
+            //even if an enemy triggers it, well, this enemy should be aggroed too then!
             isAggroed = true;
             if (other.gameObject.name.Contains("PlayerShot"))
             {
@@ -379,7 +380,7 @@ public class SummonerBossSP : MonoBehaviour
                 //possibly spawn some loot!
 
 
-                int randomNum = Random.Range(1, 60);
+                int randomNum = Random.Range(1, 75);
 
                 if (randomNum <= 6)
                 {
