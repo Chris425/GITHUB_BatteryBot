@@ -53,6 +53,10 @@ public class HeroControllerSP : MonoBehaviour
     public static bool isSlot4 = false;
     public static bool isSlot5 = false;
 
+    //keys
+    public static bool hasSkull_RED;
+    public static bool hasSkull_PURPLE;
+    public static bool hasSkull_BLUE;
 
     public static bool isSuperCharged = false;
 
@@ -280,6 +284,18 @@ public class HeroControllerSP : MonoBehaviour
         {
             //make passive arcane effect for booster? - cdc
             emptyInvSlots[9].texture = invSlots[9];
+        }
+        if (hasSkull_BLUE)
+        {
+            emptyInvSlots[10].texture = invSlots[10];
+        }
+        if (hasSkull_PURPLE)
+        {
+            emptyInvSlots[11].texture = invSlots[11];
+        }
+        if (hasSkull_RED)
+        {
+            emptyInvSlots[12].texture = invSlots[12];
         }
 
     }

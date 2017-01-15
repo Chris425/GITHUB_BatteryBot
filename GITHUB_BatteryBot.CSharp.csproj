@@ -144,6 +144,9 @@
     <Compile Include="Assets\ScriptsSinglePlayer\WeaponPickups\JetBooster_ArcanePickUp.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\WeaponPickups\ShieldPickUp.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\WeaponPickups\Shield_IcePickUp.cs" />
+    <Compile Include="Assets\ScriptsSinglePlayer\WeaponPickups\Skull_BluePickup.cs" />
+    <Compile Include="Assets\ScriptsSinglePlayer\WeaponPickups\Skull_PurplePickup.cs" />
+    <Compile Include="Assets\ScriptsSinglePlayer\WeaponPickups\Skull_RedPickup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\MaterialsSP\PREMADE ASSETS\LightningBolt\Readme.txt" />
