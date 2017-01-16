@@ -102,6 +102,7 @@
     <Compile Include="Assets\ScriptsSinglePlayer\BreathingGlowSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\CharacterControls.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\ControlsSP.cs" />
+    <Compile Include="Assets\ScriptsSinglePlayer\DoorScriptSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\EnemySpawnerSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\ExplosionEffectSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\FrozenOrbSP.cs" />
