@@ -52,6 +52,9 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Advertisements">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -66,6 +69,9 @@
     </Reference>
     <Reference Include="UnityEngine.HoloLens">
       <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Purchasing">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VR">
       <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
@@ -109,7 +115,9 @@
     <Compile Include="Assets\ScriptsSinglePlayer\AI Artificial Intelligence\MeleeFollowBossSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\AI Artificial Intelligence\MeleeFollowSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\AI Artificial Intelligence\SummonerBossSP.cs" />
+    <Compile Include="Assets\ScriptsSinglePlayer\AI Artificial Intelligence\WizardFireFollowSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\AI Artificial Intelligence\WizardFollowSP.cs" />
+    <Compile Include="Assets\ScriptsSinglePlayer\AI Artificial Intelligence\WizardPoisonFollowSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\BatterySpawnerSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\BreathingGlowSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\CharacterControls.cs" />
@@ -139,6 +147,7 @@
     <Compile Include="Assets\ScriptsSinglePlayer\PlatformMotions\ForwardsBackwards.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\PlatformMotions\GentleMovement2.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\PlatformMotions\SE_Hit_Ice_Rot.cs" />
+    <Compile Include="Assets\ScriptsSinglePlayer\PoisonWellSpawn.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\PowerUpRotatorSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\SE_DespawnSP.cs" />
     <Compile Include="Assets\ScriptsSinglePlayer\SelfDestructSP.cs" />

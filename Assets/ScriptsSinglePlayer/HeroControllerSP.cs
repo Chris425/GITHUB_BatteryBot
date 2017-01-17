@@ -18,10 +18,17 @@ public class HeroControllerSP : MonoBehaviour
 
     public GameObject SE_hit;
     public GameObject SE_hit_ice;
+    public GameObject SE_hit_poison;
+
     public ParticleSystem IdleGasStream;
     public ParticleSystem WorkingGasStream;
     public GameObject GreatswordFire;
     public GameObject AxeLightning;
+
+    //status effects
+    public static bool isPoisoned;
+    private float poisonCooldownTimer;
+    public static int poisonTicks = 10;
 
     //inventory
     public GameObject shield;
@@ -90,6 +97,7 @@ public class HeroControllerSP : MonoBehaviour
     private float dashCooldown = 14.8f;
     private float cooldownTimer;
     private float dashCooldownTimer;
+    
     bool isBoosting = false;
 
     //Battery life
@@ -113,6 +121,25 @@ public class HeroControllerSP : MonoBehaviour
         TimerUpdate();
         UpdateSlider();
         checkEquipment();
+        checkStatusEffects();
+    }
+
+    private void checkStatusEffects()
+    {
+        if (isPoisoned && poisonCooldownTimer <= 0.01f)
+        {
+            //Instatiate poison effect
+            Instantiate(SE_hit_poison, this.transform.position, this.transform.rotation);
+            battery -= 1;
+            poisonTicks -= 1;
+            poisonCooldownTimer = 3.0f;
+        }
+
+        if (poisonTicks <= 0)
+        {
+            isPoisoned = false;
+            poisonTicks = 10;
+        }
     }
 
     private void UpdateSlider()
@@ -158,7 +185,9 @@ public class HeroControllerSP : MonoBehaviour
         shield.SetActive(false);
         GS.SetActive(false);
         axe.SetActive(false);
-        jetBooster.SetActive(false);       
+        jetBooster.SetActive(false);
+
+        isPoisoned = false;
 
         battery = 100;
         speed = 15.0f;
@@ -196,12 +225,48 @@ public class HeroControllerSP : MonoBehaviour
             battery -= 10;
             Destroy(other.gameObject);
         }
+        if (other.gameObject.name.Contains("WizBasic"))
+        {
+            Instantiate(SE_hit, this.transform.position, this.transform.rotation);
+            battery -= 5;
+            Destroy(other.gameObject);
+        }
         if (other.gameObject.name.Contains("SummonerShot") || other.gameObject.name.Contains("WizardShot"))
         {
             Instantiate(SE_hit_ice, this.transform.position, this.transform.rotation);
             battery -= 2;
             Destroy(other.gameObject);
         }
+        if (other.gameObject.name.Contains("wizardFire") )
+        {
+            Instantiate(SE_hit, this.transform.position, this.transform.rotation);
+            battery -= 15;
+            Destroy(other.gameObject);
+        }
+        if (other.gameObject.name.Contains("wizardPoison"))
+        {
+            //make new SE
+            Instantiate(SE_hit, this.transform.position, this.transform.rotation);
+            battery -= 2;
+            //status effect of poison
+            isPoisoned = true;
+            //refresh number of ticks
+            poisonTicks = 10;
+
+            Destroy(other.gameObject);
+        }
+        if (other.gameObject.name.Contains("PoisonWellProjectiles"))
+        {
+            Instantiate(SE_hit_poison, this.transform.position, this.transform.rotation);
+            battery -= 3;
+            //status effect of poison
+            isPoisoned = true;
+            //refresh number of ticks
+            poisonTicks = 5;
+            
+        }
+
+
     }
     
     //CDC this will change as new stuff is added
@@ -305,6 +370,7 @@ public class HeroControllerSP : MonoBehaviour
         //let's increment the timers every update call
         cooldownTimer -= 0.04f;
         dashCooldownTimer -= 0.04f;
+        poisonCooldownTimer -= 0.03f;
 
 
 

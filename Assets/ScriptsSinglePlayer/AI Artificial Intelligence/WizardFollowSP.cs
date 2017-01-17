@@ -7,7 +7,7 @@ public class WizardFollowSP : MonoBehaviour
     private Animator anim;
     UnityEngine.AI.NavMeshAgent agent;
     
-    private int bossHealth = 20;
+    private int bossHealth = 25;
 
     //gamestates correspond to behaviour methods. Only one can be active at a time.
     public bool gameState_OoC;
@@ -23,9 +23,9 @@ public class WizardFollowSP : MonoBehaviour
     public float distanceX;
     public float distanceZ;
     public float distanceY;
-    private float cooldown = 3.5f;
-    private float IceBlastCooldown = 5.0f; // different from attack cd
-    private float shieldCooldown = 8.0f;
+    private float cooldown = 4.5f;
+    private float IceBlastCooldown = 6.0f; // longer cooldowns, ice wizard is meant to be less dangerous but more tanky.
+    private float shieldCooldown = 9.0f;
 
     private float cooldownTimer;
     private float IceBlastCooldownTimer;
