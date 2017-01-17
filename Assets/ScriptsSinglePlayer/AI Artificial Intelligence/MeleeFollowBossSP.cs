@@ -4,18 +4,22 @@ using System.Collections;
 public class MeleeFollowBossSP : MonoBehaviour
 {
     private Animator anim;
-    NavMeshAgent agent;
+    UnityEngine.AI.NavMeshAgent agent;
     //get location of character!
     public GameObject target;
     public float distanceX;
     public float distanceZ;
     public float distanceY;
     private float cooldown = 6.0f;
+    private float cooldownPowerup = 8.0f;
     private float cooldownTimer;
     public int bossHealth = 10;
     bool shouldPlayAggroEffect = false;
     Quaternion aggroRot = new Quaternion(0.0f, 180.0f, 180.0f, 0.0f);
 
+    private int bossDamage = 20;
+
+    public GameObject SkelePowerUp;
     public GameObject BiteSpecEffect1;
     public GameObject BiteSpecEffect2;
     public GameObject DeathSpecEffect;
@@ -39,7 +43,7 @@ public class MeleeFollowBossSP : MonoBehaviour
 
     void OnEnable()
     {
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         target = GameObject.Find("BatteryBot");
 
         anim = this.GetComponentInChildren<Animator>();
@@ -265,7 +269,19 @@ public class MeleeFollowBossSP : MonoBehaviour
         cooldownTimer -= 0.03f;
 
         //Debug.Log (distance);
+        int attackDecision = Random.Range(1, 10);
 
+        //50% chance of doing the power up. When in range, it may do a power up or attack - but only one because it consumes the cooldown.
+        if (attackDecision < 5 && cooldownTimer < 0.01f)
+        {           
+            GameObject myPowerUp = Instantiate(SkelePowerUp, this.transform.position, this.transform.rotation);
+            myPowerUp.transform.parent = this.gameObject.transform;
+            
+            anim.SetTrigger("isPoweringUp");
+            bossDamage += 3;
+            agent.speed += 1.0f;
+            cooldownTimer = cooldownPowerup;
+        }
 
         if ((distanceX > -2.7 && distanceX < 2.7) && (distanceZ > -2.7 && distanceZ < 2.7) && (distanceY > -3.7 && distanceY < 3.7) && cooldownTimer < 0.01f)
         {
@@ -274,11 +290,11 @@ public class MeleeFollowBossSP : MonoBehaviour
             Debug.Log("Skeleton Attacks!");
             if (HeroControllerSP.hasShield && HeroControllerSP.isSlot4)
             {
-                HeroControllerSP.battery -= 35;
+                HeroControllerSP.battery -= (bossDamage - 15);
             }
             else
             {
-                HeroControllerSP.battery -= 50;
+                HeroControllerSP.battery -= bossDamage;
             }
             
             cooldownTimer = cooldown;

@@ -5,7 +5,7 @@ using System.Collections;
 public class WizardFollowSP : MonoBehaviour
 {
     private Animator anim;
-    NavMeshAgent agent;
+    UnityEngine.AI.NavMeshAgent agent;
     
     private int bossHealth = 20;
 
@@ -73,7 +73,7 @@ public class WizardFollowSP : MonoBehaviour
         gameState_FindCover = false;
 
 
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         target = GameObject.Find("BatteryBot");
 
         anim = this.GetComponentInChildren<Animator>();
@@ -168,7 +168,7 @@ public class WizardFollowSP : MonoBehaviour
             anim.SetTrigger("isHealing");
             Vector3 ShieldPos = new Vector3(this.transform.position.x, this.transform.position.y + 0.5f, this.transform.position.z);
             GameObject myShield = Instantiate(IceShield, ShieldPos, this.transform.rotation) as GameObject;
-            myShield.transform.parent = GameObject.Find("Wizard").transform;
+            myShield.transform.parent = this.gameObject.transform;
             cooldownTimer = shieldCooldown;
         }
 
@@ -204,7 +204,7 @@ public class WizardFollowSP : MonoBehaviour
                 anim.SetTrigger("isHealing");
                 Vector3 ShieldPos = new Vector3(this.transform.position.x, this.transform.position.y + 0.5f, this.transform.position.z);
                 GameObject myShield = Instantiate(IceShield, ShieldPos, this.transform.rotation) as GameObject;
-                myShield.transform.parent = GameObject.Find("Wizard").transform;
+                myShield.transform.parent = this.gameObject.transform;
                 cooldownTimer = shieldCooldown;
             }
             else if (randomNum >= 12 && randomNum < 17 && cooldownTimer < 0.01f)
@@ -257,7 +257,7 @@ public class WizardFollowSP : MonoBehaviour
             anim.SetTrigger("isHealing");
             Vector3 ShieldPos = new Vector3(this.transform.position.x, this.transform.position.y + 0.5f, this.transform.position.z);
             GameObject myShield = Instantiate(IceShield, ShieldPos, this.transform.rotation) as GameObject;
-            myShield.transform.parent = GameObject.Find("Wizard").transform;
+            myShield.transform.parent = this.gameObject.transform;
             cooldownTimer = shieldCooldown;
         }
 

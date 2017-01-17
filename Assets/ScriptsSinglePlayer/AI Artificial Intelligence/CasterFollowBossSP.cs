@@ -4,7 +4,7 @@ using System.Collections;
 public class CasterFollowBossSP : MonoBehaviour
 {
     private Animator anim;
-    NavMeshAgent agent;
+    UnityEngine.AI.NavMeshAgent agent;
     //get location of character!
     public GameObject target;
     public float distanceX;
@@ -40,7 +40,7 @@ public class CasterFollowBossSP : MonoBehaviour
 
     void OnEnable()
     {
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         target = GameObject.Find("BatteryBot");
 
         anim = this.GetComponentInChildren<Animator>();

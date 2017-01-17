@@ -1,11 +1,13 @@
 fileFormatVersion: 2
 guid: c6eabdf5b17e83d49afc4b43a0e407b9
-timeCreated: 1484191979
+timeCreated: 1484671149
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - target: {instanceID: 0}
+  - SkelePowerUp: {fileID: 1000012129054228, guid: 7e5f6e34a2a4f2c46bd6ba4f2459a4af,
+      type: 2}
   - BiteSpecEffect1: {fileID: 1000013974356074, guid: 20d0db22bf09a984c8af57836cc5eb56,
       type: 2}
   - BiteSpecEffect2: {fileID: 1000013408731224, guid: 210e674f03555b941b185f3cfbd4f266,

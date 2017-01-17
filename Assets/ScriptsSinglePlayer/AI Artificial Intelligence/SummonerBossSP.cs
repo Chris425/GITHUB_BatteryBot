@@ -28,7 +28,7 @@ using System.Collections;
 public class SummonerBossSP : MonoBehaviour
 {
     private Animator anim;
-    NavMeshAgent agent;
+    UnityEngine.AI.NavMeshAgent agent;
     
     private int bossHealth = 50;
 
@@ -100,7 +100,7 @@ public class SummonerBossSP : MonoBehaviour
         gameState_Healing = false;
 
 
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         target = GameObject.Find("BatteryBot");
 
         anim = this.GetComponentInChildren<Animator>();
